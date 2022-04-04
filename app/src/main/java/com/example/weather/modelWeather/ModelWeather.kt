@@ -12,6 +12,7 @@ class ModelWeather(city: City) {
     private var model = ""
     private var currentCity: City = city
     private var connection: HttpURLConnection
+
     init {
         connection = if (currentCity.mLatitudeTextView == 0.0) {
             URL(

@@ -8,54 +8,53 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentLocalOrCityBinding
 import com.example.weather.modelCity.City
+import com.example.weather.modelCity.CityListViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import java.util.*
-import kotlin.properties.Delegates
 
-class LocalOrCityFragment : Fragment() {
+class LocalOrCityFragment : Fragment(){
 
     private lateinit var bindingLocalOrCity: FragmentLocalOrCityBinding
     private lateinit var currentCity: City
+    private lateinit var adapter: CityAdapter
+    private val viewModel: CityListViewModel by viewModels {factory()}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         bindingLocalOrCity = FragmentLocalOrCityBinding.inflate(inflater, container, false)
-        val cities = contract().cityService.cities
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cities)
-        bindingLocalOrCity.listItem.adapter = adapter
-        bindingLocalOrCity.listItem.setOnItemClickListener { _, _, i, _ ->
-            if (statusInternet()) {
-                val currentCity = adapter.getItem(i)!!
-                contract().launchWeatherCity(currentCity)
+
+        adapter = CityAdapter(object : CityActionListener {
+            override fun details(city: City) {
+                contract().launchWeatherCity(city)
             }
-            else
-                Toast.makeText(requireActivity(), "Проверьте состояние инернета", Toast.LENGTH_LONG).show()
-        }
+        })
+        bindingLocalOrCity.rcItem.layoutManager = LinearLayoutManager(requireContext())
+        bindingLocalOrCity.rcItem.adapter = adapter
+        viewModel.cities.observe(viewLifecycleOwner, Observer {
+            adapter.cities = it
+        })
+
         bindingLocalOrCity.local.setOnClickListener{
             if (statusInternet()) checkLastLocation()
             else Toast.makeText(requireActivity(), "Проверьте состояние инернета", Toast.LENGTH_LONG).show()
-/*            val currentCity = City(20,"","",mLatitudeTextView,mLongitudeTextView)
-            Log.d("Log", "con1tract")
-            contract().launchWeatherCity(currentCity)*/
         }
         return bindingLocalOrCity.root
     }
 
     private fun checkLastLocation() {
         val permission = ActivityCompat.checkSelfPermission(
-            requireActivity(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+            requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
 
         // If permission is granted
         if (permission == PackageManager.PERMISSION_GRANTED) {
