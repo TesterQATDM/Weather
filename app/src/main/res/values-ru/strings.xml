@@ -8,4 +8,7 @@
     <string name="weather_in_city">Погода в городе</string>
     <string name="Location">Определить местопложение</string>
     <string name="changeColor">Поменять цвет</string>
+    <string name="move_up">Вверх</string>
+    <string name="move_down">Вниз</string>
+    <string name="remove">Удалить</string>
 </resources>

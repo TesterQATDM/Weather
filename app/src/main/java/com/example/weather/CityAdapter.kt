@@ -1,9 +1,7 @@
 package com.example.weather
 
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.text.Layout
+import android.view.*
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -75,11 +73,13 @@ class CityAdapter(
             is MyViewHolder.HeaderViewHolder -> {
                 holder.itemView.delCity.visibility = View.GONE
                 holder.itemView.textView.text = "Список городов"
+                holder.itemView.textView.gravity = Gravity.CENTER
             }
             is MyViewHolder.FooterViewHolder -> {
                 val size = cities.size
                 holder.itemView.delCity.visibility = View.GONE
-                holder.itemView.textView.text = size.toString()
+                holder.itemView.textView.text = "К-во городов $size"
+                holder.itemView.textView.gravity = Gravity.CENTER
             }
         }
     }
