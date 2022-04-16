@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="city">Город</string>
+    <string name="temp">Температура</string>
+    <string name="weather">Погода</string>
+    <string name="choose_city">Выберите город</string>
+    <string name="weather_in_city">Погода в городе</string>
+    <string name="Location">Определить местопложение</string>
+    <string name="changeColor">Поменять цвет</string>
+</resources>

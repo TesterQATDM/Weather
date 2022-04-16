@@ -12,6 +12,7 @@ class ModelWeather(city: City) {
     private var model = ""
     private var currentCity: City = city
     private var connection: HttpURLConnection
+
     init {
         connection = if (currentCity.mLatitudeTextView == 0.0) {
             URL(
@@ -26,7 +27,6 @@ class ModelWeather(city: City) {
         if (connection.responseCode == 200)
             try {
                 model = connection.inputStream.bufferedReader().use { it.readText() }
-                Log.d("Log", model)
             } finally {
                 connection.disconnect()
                 mMineUserEntity = Gson().fromJson(model, Weather::class.java)

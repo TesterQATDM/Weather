@@ -1,16 +1,13 @@
 package com.example.weather.modelCity
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class City(
     val id: Int,
     val name: String,
     val description: String,
     val mLatitudeTextView: Double,
     val mLongitudeTextView: Double
-
-): Serializable{
-    override fun toString(): String {
-        return description
-    }
-}
+): Parcelable

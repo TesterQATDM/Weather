@@ -6,4 +6,5 @@ import com.example.weather.modelCity.CityService
 class App: Application() {
 
     val cityService = CityService()
+
 }

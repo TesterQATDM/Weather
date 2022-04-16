@@ -3,25 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".LocalOrCityFragment">
+    tools:context=".modelCity.LocalOrCityFragment">
 
     <Button
         android:id="@+id/local"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Определить местопложение"
+        android:text="@string/Location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
         />
-    <ListView
-        android:id="@+id/listItem"
+
+    <Button
+        android:id="@+id/changeColor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/changeColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/local"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"
+
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcItem"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/local"
+        app:layout_constraintTop_toBottomOf="@id/changeColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
 
