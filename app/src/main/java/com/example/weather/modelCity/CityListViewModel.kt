@@ -2,11 +2,17 @@ package com.example.weather.modelCity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.weather.Repository.City.CityListener
+import com.example.weather.Repository.City.CityService
+import com.example.weather.dataClass.City
+import com.example.weather.base.BaseViewModel
+import com.example.weather.modelWeather.WeatherInCityFragment
+import com.example.weather.navigator.Navigator
 
 class CityListViewModel (
-    private val cityService: CityService
-): ViewModel() {
+    private val cityService: CityService,
+    private val navigator: Navigator,
+): BaseViewModel() {
 
     private val _cities = MutableLiveData<List<City>>()
     val cities: LiveData<List<City>> = _cities
@@ -16,7 +22,12 @@ class CityListViewModel (
     }
 
     init {
-        loadCities()
+        cityService.add(listener)
+    }
+
+    fun gotoWeatherinCitywithCity(city: City){
+        val screen = WeatherInCityFragment.Screen(city = city)
+        navigator.launch(screen)
     }
 
     override fun onCleared() {
@@ -24,12 +35,8 @@ class CityListViewModel (
         cityService.removeListener(listener)
     }
 
-    private fun loadCities(){
-        cityService.add(listener)
-    }
-
     fun deleteCity(city: City){
-        cityService.deletyCity(city)
+        cityService.deleteCity(city)
     }
 
     fun move(city: City, moveBy: Int){

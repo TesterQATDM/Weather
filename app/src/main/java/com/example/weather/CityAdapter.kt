@@ -1,6 +1,5 @@
 package com.example.weather
 
-import android.text.Layout
 import android.view.*
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -8,7 +7,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.weather.databinding.CityItemBinding
-import com.example.weather.modelCity.City
+import com.example.weather.dataClass.City
 import kotlinx.android.synthetic.main.city_item.view.*
 
 interface CityActionListener{
@@ -135,14 +134,13 @@ class CityAdapter(
             }
             return@setOnMenuItemClickListener true
         }
-
         popupMenu.show()
     }
 
     companion object{
-        const val TYPE_HEADER = 0
-        const val TYPE_CITY = 1
-        const val TYPE_FOOTER = 2
+        private const val TYPE_HEADER = 0
+        private const val TYPE_CITY = 1
+        private const val TYPE_FOOTER = 2
         private const val ID_MOVE_UP = 1
         private const val ID_MOVE_DOWN = 2
         private const val ID_REMOVE = 3

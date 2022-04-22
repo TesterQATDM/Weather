@@ -1,10 +1,13 @@
 package com.example.weather
 
 import android.app.Application
-import com.example.weather.modelCity.CityService
+import com.example.weather.Repository.City.CityService
+
 
 class App: Application() {
 
-    val cityService = CityService()
+    val models = listOf<Any>(
+        CityService()
+    )
 
 }

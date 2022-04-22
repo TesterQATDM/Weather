@@ -1,26 +1,29 @@
 package com.example.weather
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.interfaces.HasCustomTitle
-import com.example.weather.modelCity.City
 import com.example.weather.modelCity.LocalOrCityFragment
-import com.example.weather.modelWeather.WeatherInCityFragment
-import java.util.*
+import com.example.weather.navigator.MainViewModel
 
-class MainActivity : AppCompatActivity(), AppContract {
+class MainActivity : AppCompatActivity(){
 
     private lateinit var bindingMain: ActivityMainBinding
     private val currentFragment: Fragment
         get() = supportFragmentManager.findFragmentById(R.id.fragmentContainer)!!
+
+    private val navigator by viewModels<MainViewModel> {
+        ViewModelProvider.AndroidViewModelFactory(
+            application
+        )
+    }
 
     private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
         override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
@@ -35,10 +38,7 @@ class MainActivity : AppCompatActivity(), AppContract {
         setSupportActionBar(bindingMain.toolbar)
 
         if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragmentContainer, LocalOrCityFragment.newInstance())
-                .commit()
+            navigator.launchFragment(this, LocalOrCityFragment.Screen(), addToBackStack = false)
         }
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
@@ -56,22 +56,22 @@ class MainActivity : AppCompatActivity(), AppContract {
         return true
     }
 
-
-    override fun launchWeatherCity(city: City) {
-        supportFragmentManager
-            .beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.fragmentContainer, WeatherInCityFragment.newInstance(city))
-            .commit()
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
-    fun updateUi() {
+    override fun onResume() {
+        super.onResume()
+        navigator.whenActivityActive.mainActivity = this
+    }
 
+    override fun onPause() {
+        super.onPause()
+        navigator.whenActivityActive.mainActivity = null
+    }
+
+    fun updateUi() {
         val fragment = currentFragment
         if (fragment is HasCustomTitle) {
             bindingMain.toolbar.title = getString(fragment.getTitleRes())

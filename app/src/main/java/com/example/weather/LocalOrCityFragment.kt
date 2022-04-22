@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.weather.databinding.FragmentLocalOrCityBinding
 import com.example.weather.modelCity.City
+import com.example.weather.utils.contract
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -31,8 +32,8 @@ class LocalOrCityFragment : Fragment() {
         bindingLocalOrCity = FragmentLocalOrCityBinding.inflate(inflater, container, false)
         val cities = contract().cityService.cities
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cities)
-        bindingLocalOrCity.listItem.adapter = adapter
-        bindingLocalOrCity.listItem.setOnItemClickListener { _, _, i, _ ->
+        bindingLocalOrCity.rcItem.adapter = adapter
+        bindingLocalOrCity.rcItem.setOnItemClickListener { _, _, i, _ ->
             if (statusInternet()) {
                 val currentCity = adapter.getItem(i)!!
                 contract().launchWeatherCity(currentCity)

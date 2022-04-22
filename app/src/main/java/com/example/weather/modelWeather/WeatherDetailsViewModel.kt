@@ -2,19 +2,26 @@ package com.example.weather.modelWeather
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.weather.modelCity.City
-import com.example.weather.modelCity.CityService
+import com.example.weather.base.BaseViewModel
+import com.example.weather.dataClass.City
+import com.example.weather.dataClass.Weather
+import com.example.weather.modelWeather.WeatherInCityFragment.Screen
 
 class WeatherDetailsViewModel(
-    private val cityService: CityService
-): ViewModel() {
+
+    screen: Screen
+
+): BaseViewModel() {
     private val _cityD = MutableLiveData<City>()
     val cityD: LiveData<City> = _cityD
-
-    fun loadCity(user: City){
-        _cityD.value = cityService.getCity(user)
+    init {
+        _cityD.value = screen.city
     }
 
+    private val _weatherAPI = MutableLiveData<Weather>()
+    val weatherAPI: LiveData<Weather> = _weatherAPI
 
+    fun loadWeather(weather: Weather){
+        _weatherAPI.value= weather
+    }
 }

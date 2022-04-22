@@ -12,30 +12,36 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.CityActionListener
 import com.example.weather.CityAdapter
+import com.example.weather.dataClass.City
+import com.example.weather.base.BaseFragment
+import com.example.weather.base.BaseScreen
 import com.example.weather.databinding.FragmentLocalOrCityBinding
-import com.example.weather.utils.contract
-import com.example.weather.utils.factory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.example.weather.base.screenViewModel
 
-class LocalOrCityFragment : Fragment(){
+class LocalOrCityFragment : BaseFragment(){
 
     private lateinit var bindingLocalOrCity: FragmentLocalOrCityBinding
     private lateinit var currentCity: City
     private lateinit var adapter: CityAdapter
-    private val viewModel by viewModels<CityListViewModel> {factory()}
+    override val viewModel by screenViewModel<CityListViewModel>()
+
+    class Screen : BaseScreen
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         bindingLocalOrCity = FragmentLocalOrCityBinding.inflate(inflater, container, false)
+        viewModel.cities.observe(viewLifecycleOwner, Observer {result ->
+            adapter.cities = result
+
+        })
 
         adapter = CityAdapter(object : CityActionListener {
             override fun onCityMove(city: City, moveBy: Int) {
@@ -43,24 +49,20 @@ class LocalOrCityFragment : Fragment(){
             }
 
             override fun details(city: City) {
-                contract().launchWeatherCity(city)
+                viewModel.gotoWeatherinCitywithCity(city)
             }
 
             override fun deleteCity(city: City) {
                 viewModel.deleteCity(city)
             }
-
         })
         bindingLocalOrCity.rcItem.layoutManager = LinearLayoutManager(requireContext())
         bindingLocalOrCity.rcItem.adapter = adapter
-        viewModel.cities.observe(viewLifecycleOwner, Observer {
-            adapter.cities = it
-        })
-
         bindingLocalOrCity.local.setOnClickListener{
             if (statusInternet()) checkLastLocation()
             else Toast.makeText(requireActivity(), "Проверьте состояние инернета", Toast.LENGTH_LONG).show()
         }
+
         return bindingLocalOrCity.root
     }
 
@@ -98,7 +100,7 @@ class LocalOrCityFragment : Fragment(){
                     if(location != null) {
                         Log.d("Log", "${location.latitude} + ${location.longitude}")
                         currentCity = City(20, "", "", location.latitude, location.longitude)
-                        contract().launchWeatherCity(currentCity)
+                        viewModel.gotoWeatherinCitywithCity(currentCity)
                     }
                 }
         }
@@ -127,9 +129,5 @@ class LocalOrCityFragment : Fragment(){
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST = 1
-        private const val AGR_CITY = "ARG_CITY"
-        fun newInstance(): LocalOrCityFragment {
-            return LocalOrCityFragment()
-        }
     }
 }
