@@ -1,4 +1,4 @@
-package com.example.weather.Repository.City
+package com.example.weather.repository.City
 
 import com.example.weather.dataClass.City
 import java.util.*

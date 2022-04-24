@@ -19,7 +19,6 @@ import com.example.weather.utils.contract
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-
 class LocalOrCityFragment : Fragment() {
 
     private lateinit var bindingLocalOrCity: FragmentLocalOrCityBinding

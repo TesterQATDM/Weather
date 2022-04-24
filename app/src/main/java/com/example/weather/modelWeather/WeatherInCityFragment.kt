@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.weather.R
-import com.example.weather.Repository.weather.ModelWeather
+import com.example.weather.repository.weather.ModelWeather
 import com.example.weather.base.BaseFragment
 import com.example.weather.base.BaseScreen
 import com.example.weather.base.screenViewModel

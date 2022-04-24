@@ -1,4 +1,4 @@
-package com.example.weather.Repository
+package com.example.weather.repository
 
 interface Repository {
 }

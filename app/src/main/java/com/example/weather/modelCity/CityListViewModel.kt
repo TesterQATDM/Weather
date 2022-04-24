@@ -2,8 +2,8 @@ package com.example.weather.modelCity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.weather.Repository.City.CityListener
-import com.example.weather.Repository.City.CityService
+import com.example.weather.repository.City.CityListener
+import com.example.weather.repository.City.CityService
 import com.example.weather.dataClass.City
 import com.example.weather.base.BaseViewModel
 import com.example.weather.modelWeather.WeatherInCityFragment
