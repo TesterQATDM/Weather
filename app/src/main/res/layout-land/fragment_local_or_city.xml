@@ -17,25 +17,28 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         />
-<<<<<<< Updated upstream
-    <ListView
-        android:id="@+id/listItem"
-=======
+
+    <Button
+        android:id="@+id/changeColor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/changeColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/local"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"
+
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcItem"
->>>>>>> Stashed changes
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/local"
+
+        app:layout_constraintTop_toBottomOf="@id/changeColor"
         app:layout_constraintVertical_bias="1.0" />
-
-
-    <include layout="@layout/for_result"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

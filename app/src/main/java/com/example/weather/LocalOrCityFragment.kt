@@ -72,9 +72,9 @@ class LocalOrCityFragment : Fragment() {
 
     private fun lastLocation() {
         val fusedLocationClient: FusedLocationProviderClient = LocationServices
-            .getFusedLocationProviderClient(requireActivity())
+            .getFusedLocationProviderClient(requireContext())
         if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
+                requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -82,9 +82,11 @@ class LocalOrCityFragment : Fragment() {
                 .addOnSuccessListener(
                     requireActivity()
                 ) { loc ->
-                    Log.d("Log", "${loc.latitude} + ${loc.longitude}")
-                    currentCity = City(20,"","",loc.latitude,loc.longitude)
-                    contract().launchWeatherCity(currentCity)
+                    if(loc != null) {
+                        Log.d("Log", "${loc.latitude} + ${loc.longitude}")
+                        currentCity = City(20, "", "", loc.latitude, loc.longitude)
+                        contract().launchWeatherCity(currentCity)
+                    }
                 }
         }
     }
