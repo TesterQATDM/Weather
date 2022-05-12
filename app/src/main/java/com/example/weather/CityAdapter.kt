@@ -4,6 +4,7 @@ import android.view.*
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.CustomPopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.weather.databinding.CityItemBinding
@@ -107,18 +108,25 @@ class CityAdapter(
     }
 
     private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(view.context, view)
+        /*add icon in PopupMenu*/
+        val popupMenu = CustomPopupMenu(view.context, view)
+        //val popupMenu = PopupMenu(view.context, view)
         val context = view.context
         val user = view.tag as City
         val position = cities.indexOfFirst { it.id == user.id }
 
         popupMenu.menu.add(0, ID_MOVE_UP, Menu.NONE, context.getString(R.string.move_up)).apply {
             isEnabled = position > 0
+            setIcon(R.drawable.ic_baseline_keyboard_arrow_up_24)
         }
         popupMenu.menu.add(0, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.move_down)).apply {
             isEnabled = position < cities.size - 1
+            setIcon(R.drawable.ic_baseline_keyboard_arrow_down_24)
         }
-        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.remove))
+        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.remove)).apply {
+            setIcon(R.drawable.ic_baseline_delete_24)
+        }
+
 
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {

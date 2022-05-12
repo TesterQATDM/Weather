@@ -17,14 +17,9 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         />
-<<<<<<< Updated upstream
-    <ListView
-        android:id="@+id/listItem"
-=======
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcItem"
->>>>>>> Stashed changes
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,8 +29,21 @@
         app:layout_constraintTop_toBottomOf="@id/local"
         app:layout_constraintVertical_bias="1.0" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
+        />
 
-    <include layout="@layout/for_result"/>
+
+    <include
+        android:id="@+id/for_result"
+        layout="@layout/for_result"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

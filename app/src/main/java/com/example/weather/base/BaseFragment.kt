@@ -37,19 +37,15 @@ abstract class BaseFragment : Fragment() {
             is ExceptionResultWeather ->{
                 result.exception
                 binding.progressBar.visibility = View.GONE
-                binding.errorContainer.visibility = View.VISIBLE
+                binding.cancelAction.visibility = View.VISIBLE
             }
             is SuccessResultWeather ->{
                 root.children
-                    .filter { it.id != R.id.progressBar && it.id != R.id.errorContainer }
+                    .filter { it.id != R.id.progressBar && it.id != R.id.cancel_action }
                     .forEach { it.visibility = View.VISIBLE }
                 onSuccess(result.data)
             }
             //onSuccess(result.data)
         }
-    }
-
-    fun BaseFragment.onTryAgain(root: View, onTryAgainPressed: () -> Unit) {
-        root.findViewById<Button>(R.id.tryagainplz).setOnClickListener { onTryAgainPressed() }
     }
 }

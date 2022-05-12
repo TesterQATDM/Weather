@@ -1,47 +1,17 @@
 package com.example.weather
 
 import android.os.Bundle
-<<<<<<< Updated upstream
-import com.example.weather.databinding.ActivityMainBinding
-import com.example.weather.modelCity.City
-import com.example.weather.modelCity.CityService
-=======
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.modelCity.LocalOrCityFragment
 import com.example.weather.navigator.*
->>>>>>> Stashed changes
 
 class MainActivity : AppCompatActivity(), FragmentsHolder {
 
-<<<<<<< Updated upstream
-    private lateinit var bindingMain: ActivityMainBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        bindingMain = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(bindingMain.root)
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragmentContainer, LocalOrCityFragment())
-            .commit()
-    }
-
-    override val cityService: CityService
-        get() = (applicationContext as App).cityService
-
-    override fun launchWeatherCity(city: City) {
-        supportFragmentManager
-            .beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.fragmentContainer, WeatherInCityFragment.newInstance(city))
-            .commit()
-    }
-=======
-    private lateinit var navigator: StackFragmentNavigator
+    private lateinit var navigatorActivity: StackFragmentNavigator/*на стороне активити*/
 
     private val activityViewModel by viewModelCreator<ActivityScopeViewModel> {
         ActivityScopeViewModel(
-            navigator = IntermediateNavigator()
+            navigator = IntermediateNavigator()/*жизненный цикл активити стек фрагметов*/
         )
     }
 
@@ -49,18 +19,13 @@ class MainActivity : AppCompatActivity(), FragmentsHolder {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        navigator = StackFragmentNavigator(
+        navigatorActivity = StackFragmentNavigator(
             activity = this,
             containerId = R.id.fragmentContainer,
             defaultTitle = getString(R.string.app_name),
             initialScreenCreator = { LocalOrCityFragment.Screen() }
         )
-        navigator.onCreate(savedInstanceState)
-    }
-
-    override fun onDestroy() {
-        navigator.onDestroy()
-        super.onDestroy()
+        navigatorActivity.onCreate(savedInstanceState)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -68,10 +33,15 @@ class MainActivity : AppCompatActivity(), FragmentsHolder {
         return true
     }
 
+    override fun onDestroy() {
+        navigatorActivity.onDestroy()
+        super.onDestroy()
+    }
+
     override fun onResume() {
         super.onResume()
         // execute navigation actions only when activity is active
-        activityViewModel.navigator.setTarget(navigator)
+        activityViewModel.navigator.setTarget(navigatorActivity)
     }
 
     override fun onPause() {
@@ -85,7 +55,6 @@ class MainActivity : AppCompatActivity(), FragmentsHolder {
     }
 
     override fun notifyScreenUpdates() {
-        navigator.notifyScreenUpdates()
+        navigatorActivity.notifyScreenUpdates()
     }
->>>>>>> Stashed changes
 }

@@ -33,12 +33,14 @@ open class BaseViewModel : ViewModel() {
         clearScope()
     }
 
-    private val coroutineContext = SupervisorJob() + Dispatchers.Main.immediate + CoroutineExceptionHandler { _, throwable ->
+    private val coroutineContext = Dispatchers.Main.immediate + CoroutineExceptionHandler { _, throwable ->
         // you can add some exception handling here
     }
-
+    protected val job = SupervisorJob()
     // custom scope which cancels jobs immediately when back button is pressed
     protected val viewModelScope = CoroutineScope(coroutineContext)
+
+
 
     fun <T> into(liveResult: MutableLiveResult<T>, block: suspend () -> T) {
         viewModelScope.launch {
@@ -46,16 +48,6 @@ open class BaseViewModel : ViewModel() {
                 liveResult.postValue(SuccessResultWeather(block()))
             } catch (e: Exception) {
                 if (e !is CancellationException) liveResult.postValue(ExceptionResultWeather(e))
-            }
-        }
-    }
-
-    fun <T> into(stateFlow: MutableStateFlow<ResultWeather<T>>, block: suspend () -> T) {
-        viewModelScope.launch {
-            try {
-                stateFlow.value = SuccessResultWeather(block())
-            } catch (e: Exception) {
-                if (e !is CancellationException) stateFlow.value = ExceptionResultWeather(e)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.weather.repository.city
 
+import android.util.Log
 import com.example.weather.dataClass.City
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -28,64 +29,46 @@ class CityService: CityRepository {
         }.toMutableList()
     }
 
-    /*override suspend fun getCity(city: City) = withContext(Dispatchers.IO) {
-        delay(5000)
-        var city1: City
-        if (city.id != -1) {
-            val delIndex = cities.indexOfFirst { it.id == city.id }
-            city1 = cities[delIndex]
-        } else{
-            city1 = city
-        }
-        return@withContext city1
-    }*/
-
-    //override fun moveCity(city: City, moveBy: Int) {
-
-    override fun moveCity(city: City, moveBy: Int): Flow<Int> = flow {
-        var process = 0
+    override suspend fun moveCity(city: City, moveBy: Int){
         val oldIndex = cities.indexOfFirst { it.id == city.id }
-        if (oldIndex == -1) emit(100)
-        else {
-            val newIndex = oldIndex + moveBy
-            if (newIndex < 0 || newIndex >= cities.size) emit(100)
-            else{
-                Collections.swap(cities, oldIndex, newIndex)
-                while (process < 0){
-                    process += 1
-                    delay(10)
-                }
-                notifyChanges()
-            }
-        }
-    }.flowOn(Dispatchers.IO)
-
-    override suspend fun getAvailableCity(): List<City> = withContext(Dispatchers.IO) {
-        delay(1000)
-        return@withContext cities
-    }
-
-    override fun deleteCity(city: City){
-        val delIndex = cities.indexOfFirst { it.id == city.id }
-        cities.removeAt(delIndex)
+        //if (oldIndex == -1) return
+        val newIndex = oldIndex + moveBy
+        //if (newIndex < 0 || newIndex >= cities.size) return
+        delay(2000)
+        Collections.swap(cities, oldIndex, newIndex)
         notifyChanges()
     }
 
-    /*override fun add(listener: CityListener){
+    override suspend fun getAvailableCity(): List<City> = withContext(Dispatchers.IO) {
+        delay(2000)
+        return@withContext cities
+    }
+
+    override fun deleteCity(city: City): Flow<Int> = flow{
+        val delIndex = cities.indexOfFirst { it.id == city.id }
+        var process = 0
+        while (process< 100){
+            process += 5
+            delay(100)
+            emit(process)
+        }
+        cities.removeAt(delIndex)
+        notifyChanges()
+    }.flowOn(Dispatchers.IO)
+
+/*    override fun add(listener: CityListener){
         listeners.add(listener)
         listener.invoke(cities)
     }
 
-     */
-
-/*    override fun removeListener(listener: CityListener){
-        listeners -= listener
+    override fun removeListener(listener: CityListener){
+        listeners.remove(listener)
     }
 
- */
+*/
 
-    override fun listenerCurrentCity(): Flow<List<City>> = callbackFlow {
-        val listener: CityListener ={
+    override fun listenerCurrentListCities(): Flow<List<City>> = callbackFlow{
+        val listener:CityListener = {
             trySend(it)
         }
         listeners.add(listener)
@@ -93,7 +76,6 @@ class CityService: CityRepository {
             listeners.remove(listener)
         }
     }.buffer(Channel.CONFLATED)
-
 
     private fun notifyChanges() {
         listeners.forEach { it.invoke(cities) }

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class StackFragmentNavigator(
     private val activity: AppCompatActivity,
-    @IdRes private val containerId: Int,
+    @IdRes private val containerId: Int,/*контейрне в который фрагменты складывются*/
     private val defaultTitle: String,
     private val initialScreenCreator: () -> BaseScreen
 ) : Navigator {
@@ -41,6 +41,7 @@ class StackFragmentNavigator(
 
     fun notifyScreenUpdates() {
         val f = activity.supportFragmentManager.findFragmentById(containerId)
+        Log.d("Log", activity.supportFragmentManager.backStackEntryCount.toString())
         if (activity.supportFragmentManager.backStackEntryCount > 0) {
             // more than 1 screen -> show back button in the toolbar
             activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -48,10 +49,9 @@ class StackFragmentNavigator(
             activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
         if (f is HasCustomTitle){
-            Log.d("Log", f.getTitleRes().toString())
-            activity.toolbar?.title = f.getTitleRes()
+            activity.supportActionBar?.title = f.getTitleRes()
         } else {
-            activity.toolbar?.title = defaultTitle
+            activity.supportActionBar?.title = defaultTitle
         }
     }
 

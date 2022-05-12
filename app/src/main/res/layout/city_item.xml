@@ -23,5 +23,5 @@
         android:layout_height="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_baseline_delete_24" />
+        android:src="@drawable/ic_baseline_dehaze_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

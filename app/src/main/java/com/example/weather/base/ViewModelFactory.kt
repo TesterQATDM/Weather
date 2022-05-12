@@ -18,6 +18,7 @@ inline fun <reified VM : ViewModel> BaseFragment.screenViewModel() = viewModels<
     val screen = requireArguments().getParcelable<BaseScreen>(ARG_SCREEN) as BaseScreen
 
     // using Providers API directly for getting MainViewModel instance
+    // get activity and change title when we in second fragment
     val activityScopeViewModel = (requireActivity() as FragmentsHolder).getActivityScopeViewModel()
 
     // forming the list of available dependencies:

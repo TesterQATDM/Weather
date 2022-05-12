@@ -13,10 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.CityActionListener
@@ -26,13 +27,16 @@ import com.example.weather.base.BaseFragment
 import com.example.weather.base.BaseScreen
 import com.example.weather.base.screenViewModel
 import com.example.weather.dataClass.City
+import com.example.weather.databinding.ForResultBinding
 import com.example.weather.databinding.FragmentLocalOrCityBinding
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.synthetic.main.for_result.view.*
 
 class LocalOrCityFragment : BaseFragment(){
 
     private lateinit var bindingLocalOrCity: FragmentLocalOrCityBinding
+    private lateinit var bindingResult: ForResultBinding
     private lateinit var currentCity: City
     private lateinit var adapter: CityAdapter
     override val viewModel by screenViewModel<CityListViewModel>()
@@ -49,6 +53,7 @@ class LocalOrCityFragment : BaseFragment(){
         savedInstanceState: Bundle?
     ): View {
         bindingLocalOrCity = FragmentLocalOrCityBinding.inflate(inflater, container, false)
+        bindingResult = ForResultBinding.bind(bindingLocalOrCity.root)
         viewModel.cities.observe(viewLifecycleOwner, Observer {result ->
             renderResult(
                 root = bindingLocalOrCity.root,
@@ -63,11 +68,12 @@ class LocalOrCityFragment : BaseFragment(){
 
         adapter = CityAdapter(object : CityActionListener {
             override fun onCityMove(city: City, moveBy: Int) {
+                Log.d("Log", "move(city, moveBy)")
                 viewModel.move(city, moveBy)
             }
 
             override fun details(city: City) {
-                viewModel.gotoWeatherinCitywithCity(city)
+                viewModel.gotoWeatherInCityWithCity(city)
             }
 
             override fun deleteCity(city: City) {
@@ -83,7 +89,24 @@ class LocalOrCityFragment : BaseFragment(){
             }
             else Toast.makeText(requireActivity(), "Проверьте состояние инернета", Toast.LENGTH_LONG).show()
         }
+        bindingResult.cancelAction.setOnClickListener{
+            viewModel.cancel()
+        }
+        observeState()
         return bindingLocalOrCity.root
+    }
+
+    private fun observeState() = viewModel.state.observe(viewLifecycleOwner) {it ->
+        if (it.enableViews){
+            bindingLocalOrCity.rcItem.visibility = View.VISIBLE
+            bindingLocalOrCity.local.visibility = View.VISIBLE
+        }
+        else{
+            bindingLocalOrCity.root.children.forEach { elements ->
+                elements.visibility = View.GONE }
+        }
+        bindingLocalOrCity.progressBar?.visibility  = if (it.showProgress) View.VISIBLE else View.INVISIBLE
+        bindingResult.cancelAction.visibility  = if (it.showProgress) View.VISIBLE else View.INVISIBLE
     }
 
     private fun onGotLocationPermissionsResult(grantResults: Map<String, Boolean>){
@@ -130,7 +153,7 @@ class LocalOrCityFragment : BaseFragment(){
                 Log.d("Log", location.toString())
                 location?.let { it: Location ->
                     currentCity = City(111, "", "Локальный город", location.latitude, location.longitude)
-                    viewModel.gotoWeatherinCitywithCity(currentCity)
+                    viewModel.gotoWeatherInCityWithCity(currentCity)
                 }
             }
         }
