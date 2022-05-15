@@ -13,14 +13,8 @@ class WeatherDetailsViewModel(
     savedStateHandle: SavedStateHandle
 
 ): BaseViewModel() {
-    //private val _cityD = MutableLiveData<City>()
     private val _cityD = savedStateHandle.getLiveData("currentColorId", screen.city)
     val cityD: LiveData<City> = _cityD
-    /*init {
-        _cityD.value = screen.city
-    }
-
-     */
 
     private val _weatherAPI = MutableLiveData<Weather>()
     val weatherAPI: LiveData<Weather> = _weatherAPI

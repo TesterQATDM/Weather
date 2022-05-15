@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.example.weather.R
 import com.example.weather.base.BaseFragment
 import com.example.weather.base.BaseScreen
 import com.example.weather.base.screenViewModel
-import com.example.weather.databinding.FragmentWeatherInCityBinding
-import com.example.weather.interfaces.HasCustomTitle
 import com.example.weather.dataClass.City
 import com.example.weather.dataClass.Weather
+import com.example.weather.databinding.FragmentWeatherInCityBinding
+import com.example.weather.interfaces.HasCustomTitle
 import com.example.weather.repository.weather.ModelWeather
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineScope

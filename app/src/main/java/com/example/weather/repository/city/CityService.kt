@@ -1,6 +1,5 @@
 package com.example.weather.repository.city
 
-import android.util.Log
 import com.example.weather.dataClass.City
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -49,23 +48,12 @@ class CityService: CityRepository {
         var process = 0
         while (process< 100){
             process += 5
-            delay(100)
+            delay(1000)
             emit(process)
         }
         cities.removeAt(delIndex)
         notifyChanges()
-    }.flowOn(Dispatchers.IO)
-
-/*    override fun add(listener: CityListener){
-        listeners.add(listener)
-        listener.invoke(cities)
     }
-
-    override fun removeListener(listener: CityListener){
-        listeners.remove(listener)
-    }
-
-*/
 
     override fun listenerCurrentListCities(): Flow<List<City>> = callbackFlow{
         val listener:CityListener = {

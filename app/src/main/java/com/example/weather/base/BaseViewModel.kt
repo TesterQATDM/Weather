@@ -9,25 +9,18 @@ import com.example.weather.asynchrony.ResultWeather
 import com.example.weather.asynchrony.SuccessResultWeather
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Base class for all view-models.
  */
 typealias LiveResult<T> = LiveData<ResultWeather<T>>
 typealias MutableLiveResult<T> = MutableLiveData<ResultWeather<T>>
-typealias MediatorLiveResult<T> = MediatorLiveData<Result<T>>
 
 open class BaseViewModel : ViewModel() {
     /**
      * Override this method in child classes if you want to listen for results
      * from other screens
      */
-/*
-    open fun onResult(result: Any) {
-    }
-
-*/
     override fun onCleared() {
         super.onCleared()
         clearScope()

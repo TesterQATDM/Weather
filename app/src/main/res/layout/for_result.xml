@@ -26,9 +26,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Try again"
+            android:text="@string/cancel"
             android:gravity="center"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:visibility="visible"
             />
 </merge>

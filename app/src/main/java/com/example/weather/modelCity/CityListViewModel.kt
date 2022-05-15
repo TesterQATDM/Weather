@@ -10,12 +10,11 @@ import com.example.weather.base.MutableLiveResult
 import com.example.weather.dataClass.City
 import com.example.weather.modelWeather.WeatherInCityFragment
 import com.example.weather.navigator.Navigator
-import com.example.weather.repository.city.CityListener
 import com.example.weather.repository.city.CityService
-import com.example.weather.utils.requireValue
 import com.example.weather.utils.share
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
 
 class CityListViewModel (
     private val cityService: CityService,
@@ -28,18 +27,21 @@ class CityListViewModel (
     private val _state = MutableLiveData(State())
     val state = _state.share()
 
+
     //for navigate
     //private val _navigateToTabsEvent = MutableUnitLiveEvent()
     //val navigateToTabsEvent = _navigateToTabsEvent.share()
 
-    init {
-        viewModelScope.launch {
-            cityService.listenerCurrentListCities()
-                .collect {
-                    _cities.value = SuccessResultWeather(it)
-                }
-        }
-        load()
+    init{
+        listenerCurrentListCitiesVM()// listener events
+        load()//load _cities
+    }
+
+    private fun listenerCurrentListCitiesVM(): Job = viewModelScope.launch {
+        cityService.listenerCurrentListCities()
+            .collect {
+                _cities.value = SuccessResultWeather(it)
+            }
     }
 
     fun gotoWeatherInCityWithCity(city: City){
@@ -47,15 +49,13 @@ class CityListViewModel (
         navigator.launch(screen)
     }
 
-    fun deleteCity(city: City): Job = viewModelScope.launch {
-            showProgress()
-            try {
-                cityService.deleteCity(city)
-                processIsOK()
-            } catch (e: RuntimeException) {
-                processRuntimeException()
-            }
+    fun deleteCity(city: City) = viewModelScope.launch {
+        _state.value = State(InProgress = 0)
+        cityService.deleteCity(city).collect { process ->
+            _state.value = State(InProgress = process)
         }
+        _state.value = State(InProgress = 100)
+    }
 
 
     fun move(city: City, moveBy: Int): Job = viewModelScope.launch {
@@ -71,32 +71,26 @@ class CityListViewModel (
     private fun load() = into(_cities){ cityService.getAvailableCity() }
 
     private fun processRuntimeException() {
-        _state.value = _state.requireValue().copy(
-            InProgressDeleteOrMove = false
-        )
+        _state.value = State(InProgress = 100)
     }
 
     private fun showProgress() {
-        _state.value = State(InProgressDeleteOrMove = true)
+        _state.value = State(InProgress = 0)
     }
 
     private fun processIsOK() {
-        _state.value = _state.requireValue().copy(
-            InProgressDeleteOrMove = false
-        )
+        _state.value = State(InProgress = 100)
     }
 
     fun cancel() {
         viewModelScope.coroutineContext.cancelChildren()
+        listenerCurrentListCitiesVM()
         processIsOK()
     }
 
     //private fun launchTabsScreen() = _navigateToTabsEvent.publishEvent()
 
     data class State(
-        val InProgressDeleteOrMove: Boolean = false
-    ) {
-        val showProgress: Boolean get() = InProgressDeleteOrMove
-        val enableViews: Boolean get() = !InProgressDeleteOrMove
-    }
+        var InProgress: Int = 0
+    )
 }

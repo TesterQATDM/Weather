@@ -5,12 +5,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.weather.R
 import com.example.weather.databinding.ForResultBinding
 import com.example.weather.asynchrony.PendingResultWeather
 import com.example.weather.asynchrony.SuccessResultWeather
 import com.example.weather.asynchrony.ExceptionResultWeather
 import com.example.weather.asynchrony.ResultWeather
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
@@ -45,7 +50,19 @@ abstract class BaseFragment : Fragment() {
                     .forEach { it.visibility = View.VISIBLE }
                 onSuccess(result.data)
             }
-            //onSuccess(result.data)
+        }
+    }
+
+    fun <T> BaseFragment.collectFlow(flow: Flow<T>, onCollect: (T) -> Unit) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            // this coroutine is cancelled in onDestroyView
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // this coroutine is launched every time when onStart is called;
+                // collecting is cancelled in onStop
+                flow.collect {
+                    onCollect(it)
+                }
+            }
         }
     }
 }

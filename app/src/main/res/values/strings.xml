@@ -20,4 +20,7 @@
     <string name="open">Open</string>
     <string name="camera_permission_granted">Camera permission has been granted</string>
     <string name="permissions_denied_forever">Permissions are denied forever</string>
+    <string name="cancel">Отменить</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="percentage_value">%1$d%%</string>
 </resources>

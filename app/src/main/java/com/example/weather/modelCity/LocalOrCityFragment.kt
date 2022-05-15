@@ -31,7 +31,6 @@ import com.example.weather.databinding.ForResultBinding
 import com.example.weather.databinding.FragmentLocalOrCityBinding
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.for_result.view.*
 
 class LocalOrCityFragment : BaseFragment(){
 
@@ -54,6 +53,7 @@ class LocalOrCityFragment : BaseFragment(){
     ): View {
         bindingLocalOrCity = FragmentLocalOrCityBinding.inflate(inflater, container, false)
         bindingResult = ForResultBinding.bind(bindingLocalOrCity.root)
+        bindingLocalOrCity.saveProgressGroup!!.visibility = View.GONE
         viewModel.cities.observe(viewLifecycleOwner, Observer {result ->
             renderResult(
                 root = bindingLocalOrCity.root,
@@ -97,17 +97,22 @@ class LocalOrCityFragment : BaseFragment(){
     }
 
     private fun observeState() = viewModel.state.observe(viewLifecycleOwner) {it ->
-        if (it.enableViews){
+        Log.d("Log", it.InProgress.toString()+ " LocalOrCityFragment + observeState")
+        if (it.InProgress == 100){
             bindingLocalOrCity.rcItem.visibility = View.VISIBLE
             bindingLocalOrCity.local.visibility = View.VISIBLE
+            bindingLocalOrCity.saveProgressGroup!!.visibility = View.GONE
         }
         else{
             bindingLocalOrCity.root.children.forEach { elements ->
                 elements.visibility = View.GONE }
+            bindingLocalOrCity.saveProgressGroup!!.visibility = View.VISIBLE
+            Log.d("Log", it.InProgress.toString()+ " LocalOrCityFragment + observeState InProgress is true")
+            bindingLocalOrCity.saveProgressBar?.progress = it.InProgress
+            bindingLocalOrCity.savingPercentageTextView?.text = resources.getString(R.string.percentage_value, it.InProgress)
         }
-        bindingLocalOrCity.progressBar?.visibility  = if (it.showProgress) View.VISIBLE else View.INVISIBLE
-        bindingResult.cancelAction.visibility  = if (it.showProgress) View.VISIBLE else View.INVISIBLE
     }
+
 
     private fun onGotLocationPermissionsResult(grantResults: Map<String, Boolean>){
         if (grantResults[Manifest.permission.ACCESS_FINE_LOCATION] == true) {

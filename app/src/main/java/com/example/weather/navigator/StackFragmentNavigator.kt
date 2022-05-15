@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentManager
 import com.example.weather.base.BaseScreen
 import com.example.weather.base.BaseScreen.Companion.ARG_SCREEN
 import com.example.weather.interfaces.HasCustomTitle
-import kotlinx.android.synthetic.main.activity_main.*
 
 class StackFragmentNavigator(
     private val activity: AppCompatActivity,

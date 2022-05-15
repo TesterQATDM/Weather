@@ -1,7 +1,5 @@
 package com.example.weather.interfaces
 
-import androidx.annotation.StringRes
-
 /**
  * Implement this interface in your fragment if you want to override default toolbar title
  */
