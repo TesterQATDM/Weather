@@ -1,4 +1,4 @@
-package com.example.weather.modelWeather
+package com.example.weather.dataClass
 
 data class Weather(
     var coord :Map<String, String>,
